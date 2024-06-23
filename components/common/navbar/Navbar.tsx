@@ -1,6 +1,3 @@
-import { NavbarMobile } from './NavbarMobile'
-
-import { Logo } from '@/components/Logo'
 import { NavbarLink } from './NavbarLink'
 
 import { LayoutDashboardIcon, ArrowDownUp, SettingsIcon } from 'lucide-react'
