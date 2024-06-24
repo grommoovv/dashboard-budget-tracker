@@ -14,19 +14,16 @@ import { Period, Timeframe } from '@/lib/types'
 import { useQuery } from '@tanstack/react-query'
 import React, { FC } from 'react'
 
-interface HistoryPeriodSelectorProps {
+interface SelectHistoryPeriodProps {
   period: Period
   setPeriod: (period: Period) => void
   timeframe: Timeframe
   setTimeframe: (timeframe: Timeframe) => void
 }
 
-export const HistoryPeriodSelector: FC<HistoryPeriodSelectorProps> = ({
-  period,
-  setPeriod,
-  timeframe,
-  setTimeframe,
-}) => {
+export const SelectHistoryPeriod: FC<SelectHistoryPeriodProps> = (props) => {
+  const { period, setPeriod, timeframe, setTimeframe } = props
+
   const historyPeriods = useQuery<GetHistoryPeriodsResponseType>({
     queryKey: ['overview', 'history', 'periods'],
     queryFn: () => fetch(`/api/history-periods`).then((res) => res.json()),

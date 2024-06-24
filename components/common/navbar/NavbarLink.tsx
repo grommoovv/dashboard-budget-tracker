@@ -23,7 +23,7 @@ export const NavbarLink: FC<NavbarLinkProps> = ({ link, label, icon, clickCallba
       <Link
         href={link}
         className={cn(
-          'flex gap-2 w-full justify-start items-center leading-none text-lg text-muted-foreground transition-all',
+          'flex gap-2 w-full justify-start items-center leading-none text-lg text-zinc-50 transition-all',
           isActive && 'text-zinc-900 font-semibold'
         )}
         onClick={() => {

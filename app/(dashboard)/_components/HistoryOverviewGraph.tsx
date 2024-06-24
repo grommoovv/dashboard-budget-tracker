@@ -1,5 +1,4 @@
 'use client'
-import { HistoryPeriodSelector } from '@/app/(dashboard)/_components/HistoryPeriodSelector'
 import { SkeletonWrapper } from '@/components/SkeletonWrapper'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,27 +10,13 @@ import { useQuery } from '@tanstack/react-query'
 import React, { Dispatch, FC, SetStateAction, useCallback, useMemo, useState } from 'react'
 import CountUp from 'react-countup'
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { SelectHistoryPeriod } from '../_features/SelectHistoryPeriod'
 
-interface HistoryProps {
+interface HistoryOverviewGraphProps {
   userSettings: UserSettings
 }
 
-export const History: FC<HistoryProps> = ({ userSettings }) => {
-  return (
-    <section>
-      <div className='p-6'>
-        <h2 className='section-title'>History</h2>
-      </div>
-      <HistoryGraph userSettings={userSettings} />
-    </section>
-  )
-}
-
-interface HistoryGraphProps {
-  userSettings: UserSettings
-}
-
-const HistoryGraph: FC<HistoryGraphProps> = ({ userSettings }) => {
+export const HistoryOverviewGraph: FC<HistoryOverviewGraphProps> = ({ userSettings }) => {
   const [timeframe, setTimeframe] = useState<Timeframe>('month')
   const [period, setPeriod] = useState<Period>({
     month: new Date().getMonth(),
@@ -56,7 +41,7 @@ const HistoryGraph: FC<HistoryGraphProps> = ({ userSettings }) => {
     <Card className='col-span-12 w-full'>
       <CardHeader className='gap-2'>
         <CardTitle className='grid grid-flow-row justify-between gap-2 md:grid-flow-col'>
-          <HistoryPeriodSelector
+          <SelectHistoryPeriod
             period={period}
             setPeriod={setPeriod}
             timeframe={timeframe}

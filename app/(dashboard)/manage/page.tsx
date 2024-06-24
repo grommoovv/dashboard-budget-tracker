@@ -1,6 +1,6 @@
 'use client'
-import { CreateCategoryDialog } from '@/app/(dashboard)/_components/CreateCategoryDialog'
-import { DeleteCategoryDialog } from '@/app/(dashboard)/_components/DeleteCategoryDialog'
+import { CreateCategoryDialog } from '@/app/(dashboard)/_features/CreateCategoryDialog'
+import { DeleteCategoryDialog } from '@/app/(dashboard)/_features/DeleteCategoryDialog'
 import { CurrencyComboBox } from '@/components/CurrencyComboBox'
 import { Header } from '@/components/Header'
 import { SkeletonWrapper } from '@/components/SkeletonWrapper'

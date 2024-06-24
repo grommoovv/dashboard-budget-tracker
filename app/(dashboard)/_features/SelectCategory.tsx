@@ -1,6 +1,6 @@
 'use client'
 
-import { CreateCategoryDialog } from '@/app/(dashboard)/_components/CreateCategoryDialog'
+import { CreateCategoryDialog } from '@/app/(dashboard)/_features/CreateCategoryDialog'
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -18,14 +18,27 @@ import { useQuery } from '@tanstack/react-query'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import React, { FC, useCallback, useEffect, useState } from 'react'
 
-interface CategoryPickerProps {
+interface CategoryRowProps {
+  category: Category
+}
+
+const CategoryRow: FC<CategoryRowProps> = ({ category }) => {
+  return (
+    <div className='flex items-center gap-2'>
+      <span role='img'>{category.icon}</span>
+      <span>{category.name}</span>
+    </div>
+  )
+}
+
+interface SelectCategoryProps {
   type: TransactionType
   onChange: (value: string) => void
 }
 
-export const CategoryPicker: FC<CategoryPickerProps> = ({ type, onChange }) => {
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState('')
+export const SelectCategory: FC<SelectCategoryProps> = ({ type, onChange }) => {
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState('')
 
   useEffect(() => {
     if (!value) {
@@ -101,18 +114,5 @@ export const CategoryPicker: FC<CategoryPickerProps> = ({ type, onChange }) => {
         </Command>
       </PopoverContent>
     </Popover>
-  )
-}
-
-interface CategoryRowProps {
-  category: Category
-}
-
-const CategoryRow: FC<CategoryRowProps> = ({ category }) => {
-  return (
-    <div className='flex items-center gap-2'>
-      <span role='img'>{category.icon}</span>
-      <span>{category.name}</span>
-    </div>
   )
 }

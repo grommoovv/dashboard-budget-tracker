@@ -1,54 +1,17 @@
-'use client'
-
 import { GetCategoriesStatsResponseType } from '@/app/api/stats/categories/route'
-import { SkeletonWrapper } from '@/components/SkeletonWrapper'
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { DateToUTCDate, GetFormatterForCurrency } from '@/lib/helpers'
 import { TransactionType } from '@/lib/types'
-import { UserSettings } from '@prisma/client'
-import { useQuery } from '@tanstack/react-query'
-import React, { FC, useMemo } from 'react'
+import { FC } from 'react'
+import { Card, CardHeader, CardTitle } from '../ui/card'
+import { ScrollArea } from '@radix-ui/react-scroll-area'
+import { Progress } from '@/components/ui/progress'
 
-interface CategoriesStatsProps {
-  userSettings: UserSettings
-  from: Date
-  to: Date
-}
-
-export const CategoriesStats: FC<CategoriesStatsProps> = ({ userSettings, from, to }) => {
-  const statsQuery = useQuery<GetCategoriesStatsResponseType>({
-    queryKey: ['overview', 'stats', 'categories', from, to],
-    queryFn: () =>
-      fetch(`/api/stats/categories?from=${DateToUTCDate(from)}&to=${DateToUTCDate(to)}`).then(
-        (res) => res.json()
-      ),
-  })
-
-  const formatter = useMemo(() => {
-    return GetFormatterForCurrency(userSettings.currency)
-  }, [userSettings.currency])
-
-  return (
-    <div className='flex w-full flex-wrap gap-2 md:flex-nowrap'>
-      <SkeletonWrapper isLoading={statsQuery.isFetching}>
-        <CategoriesCard formatter={formatter} type='income' data={statsQuery.data || []} />
-      </SkeletonWrapper>
-      <SkeletonWrapper isLoading={statsQuery.isFetching}>
-        <CategoriesCard formatter={formatter} type='expense' data={statsQuery.data || []} />
-      </SkeletonWrapper>
-    </div>
-  )
-}
-
-interface CategoriesCardProps {
+interface CategoryOverviewCardProps {
   type: TransactionType
   formatter: Intl.NumberFormat
   data: GetCategoriesStatsResponseType
 }
 
-const CategoriesCard: FC<CategoriesCardProps> = ({ data, type, formatter }) => {
+export const CategoryOverviewCard: FC<CategoryOverviewCardProps> = ({ data, type, formatter }) => {
   const filteredData = data.filter((el) => el.type === type)
   const total = filteredData.reduce((acc, el) => acc + (el._sum?.amount || 0), 0)
 

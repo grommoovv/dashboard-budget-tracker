@@ -2,7 +2,7 @@
 
 import { DateToUTCDate } from '@/lib/helpers'
 import { useQuery } from '@tanstack/react-query'
-import React, { useMemo, useState } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -41,7 +41,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import DeleteTransactionDialog from '@/app/(dashboard)/transactions/_components/DeleteTransactionDialog'
+import DeleteTransactionDialog from '../_features/DeleteTransactionDialog'
 
 interface Props {
   from: Date
@@ -125,7 +125,7 @@ const csvConfig = mkConfig({
   useKeysAsHeaders: true,
 })
 
-export default function TransactionTable({ from, to }: Props) {
+export const TransactionHistoryTable = ({ from, to }: Props) => {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
@@ -277,7 +277,11 @@ export default function TransactionTable({ from, to }: Props) {
   )
 }
 
-function RowActions({ transaction }: { transaction: TransactionHistoryRow }) {
+interface RowActionsProps {
+  transaction: TransactionHistoryRow
+}
+
+const RowActions: FC<RowActionsProps> = ({ transaction }) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   return (

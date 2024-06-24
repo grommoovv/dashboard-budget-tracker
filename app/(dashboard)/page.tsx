@@ -1,8 +1,4 @@
-import { CreateTransactionDialog } from '@/app/(dashboard)/_components/CreateTransactionDialog'
-import { History } from '@/app/(dashboard)/_components/History'
-import { Overview } from '@/app/(dashboard)/_components/Overview'
-import { Header } from '@/components/Header'
-import { Button } from '@/components/ui/button'
+import { Dashboard } from '@/app/(dashboard)/_components/Dashboard'
 import prisma from '@/lib/prisma'
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
@@ -27,8 +23,7 @@ export default async function DashboardPage() {
 
   return (
     <div className='h-full bg-background'>
-      <Overview userSettings={userSettings} />
-      <History userSettings={userSettings} />
+      <Dashboard userSettings={userSettings} />
     </div>
   )
 }

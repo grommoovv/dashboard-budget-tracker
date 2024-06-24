@@ -1,5 +1,4 @@
 'use client'
-
 import {
   Dialog,
   DialogClose,
@@ -12,9 +11,7 @@ import {
 import { TransactionType } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { CreateTransactionSchema, CreateTransactionSchemaType } from '@/schema/transaction'
-import { FC, ReactNode, useCallback, useState } from 'react'
-
-import React from 'react'
+import { FC, ReactNode, useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
@@ -27,7 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { CategoryPicker } from '@/app/(dashboard)/_components/CategoryPicker'
+import { SelectCategory } from '@/app/(dashboard)/_features/SelectCategory'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
@@ -37,6 +34,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { CreateTransaction } from '@/app/(dashboard)/_actions/transactions'
 import { toast } from 'sonner'
 import { DateToUTCDate } from '@/lib/helpers'
+import { useCreateTransaction } from '@/services'
 
 interface CreateTransactionDialogProps {
   trigger: ReactNode
@@ -52,22 +50,11 @@ export const CreateTransactionDialog: FC<CreateTransactionDialogProps> = ({ trig
     },
   })
   const [open, setOpen] = useState(false)
-  const handleCategoryChange = useCallback(
-    (value: string) => {
-      form.setValue('category', value)
-    },
-    [form]
-  )
 
-  const queryClient = useQueryClient()
+  const { mutate: createTransactionMutation, isPending, isSuccess } = useCreateTransaction()
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: CreateTransaction,
-    onSuccess: () => {
-      toast.success('Transaction created successfully 🎉', {
-        id: 'create-transaction',
-      })
-
+  useEffect(() => {
+    if (isSuccess) {
       form.reset({
         type,
         description: '',
@@ -75,26 +62,27 @@ export const CreateTransactionDialog: FC<CreateTransactionDialogProps> = ({ trig
         date: new Date(),
         category: undefined,
       })
-
-      // After creating a transaction, we need to invalidate the overview query which will refetch data in the homepage
-      queryClient.invalidateQueries({
-        queryKey: ['overview'],
-      })
-
       setOpen((prev) => !prev)
+    }
+  }, [isSuccess, form, type])
+
+  const handleCategoryChange = useCallback(
+    (value: string) => {
+      form.setValue('category', value)
     },
-  })
+    [form]
+  )
 
   const onSubmit = useCallback(
     (values: CreateTransactionSchemaType) => {
       toast.loading('Creating transaction...', { id: 'create-transaction' })
 
-      mutate({
+      createTransactionMutation({
         ...values,
         date: DateToUTCDate(values.date),
       })
     },
-    [mutate]
+    [createTransactionMutation]
   )
 
   return (
@@ -147,7 +135,7 @@ export const CreateTransactionDialog: FC<CreateTransactionDialogProps> = ({ trig
                   <FormItem className='flex flex-col'>
                     <FormLabel>Category</FormLabel>
                     <FormControl>
-                      <CategoryPicker type={type} onChange={handleCategoryChange} />
+                      <SelectCategory type={type} onChange={handleCategoryChange} />
                     </FormControl>
                     <FormDescription>Select a category for this transaction</FormDescription>
                   </FormItem>

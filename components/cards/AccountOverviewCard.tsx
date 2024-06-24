@@ -2,14 +2,16 @@ import { FC, ReactNode, useCallback } from 'react'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import CountUp from 'react-countup'
 
-interface StatisticsCardProps {
+interface AccountOverviewCardProps {
   formatter: Intl.NumberFormat
   icon: ReactNode
   title: String
   value: number
 }
 
-export const StatisticsCard: FC<StatisticsCardProps> = ({ formatter, value, title, icon }) => {
+export const AccountOverviewCard: FC<AccountOverviewCardProps> = (props) => {
+  const { formatter, value, title, icon } = props
+
   const formatFn = useCallback(
     (value: number) => {
       return formatter.format(value)
@@ -18,7 +20,7 @@ export const StatisticsCard: FC<StatisticsCardProps> = ({ formatter, value, titl
   )
 
   return (
-    <Card className='h-max w-full items-center gap-2 bg-transparent'>
+    <Card className='w-full h-full items-center gap-2 bg-transparent'>
       <CardHeader className='flex-row justify-between items-center'>
         <h4 className='stat-card-title'>{title}</h4>
         <div>{icon}</div>

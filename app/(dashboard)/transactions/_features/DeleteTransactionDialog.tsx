@@ -1,5 +1,4 @@
 'use client'
-
 import { DeleteTransaction } from '@/app/(dashboard)/transactions/_actions/deleteTransaction'
 import {
   AlertDialog,
@@ -11,6 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { useDeleteTransaction } from '@/services'
 import { useQueryClient, useMutation } from '@tanstack/react-query'
 import React from 'react'
 import { toast } from 'sonner'
@@ -22,25 +22,8 @@ interface Props {
 }
 
 export default function DeleteTransactionDialog({ open, setOpen, transactionId }: Props) {
-  const queryClient = useQueryClient()
+  const deleteMutation = useDeleteTransaction()
 
-  const deleteMutation = useMutation({
-    mutationFn: DeleteTransaction,
-    onSuccess: async () => {
-      toast.success('Transaction deleted successfully', {
-        id: transactionId,
-      })
-
-      await queryClient.invalidateQueries({
-        queryKey: ['transactions'],
-      })
-    },
-    onError: () => {
-      toast.error('Something went wrong', {
-        id: transactionId,
-      })
-    },
-  })
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
@@ -57,7 +40,7 @@ export default function DeleteTransactionDialog({ open, setOpen, transactionId }
               toast.loading('Deleting transaction...', {
                 id: transactionId,
               })
-              deleteMutation.mutate(transactionId)
+              deleteMutation.mutateAsync(transactionId)
             }}
           >
             Continue
